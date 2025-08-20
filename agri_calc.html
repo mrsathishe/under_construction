@@ -2,762 +2,300 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Integrated Farm Finance Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Integrated Farming Loan Projection</title>
     <style>
-      :root {
-        --bg: #0b1020;
-        --card: #121831;
-        --muted: #9aa3b2;
-        --text: #e8eefc;
-        --accent: #4fb477;
-        --accent-2: #6aa8ff;
-        --danger: #ff6b6b;
-      }
-      * {
-        box-sizing: border-box;
-      }
       body {
-        margin: 0;
-        background: linear-gradient(180deg, #0b1020, #0b132b);
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
-          "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-        color: var(--text);
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f0f8ff;
+        color: #003366;
       }
-      header {
-        padding: 24px 20px;
+      h1,
+      h2 {
+        color: #006400;
         text-align: center;
       }
-      header h1 {
-        margin: 0 0 6px;
-        font-size: clamp(20px, 3vw, 28px);
-      }
-      header p {
-        margin: 0;
-        color: var(--muted);
-      }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 16px 56px;
-      }
-      .grid {
+      form {
         display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 16px;
-      }
-      .card {
-        background: var(--card);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 16px;
-        padding: 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-      }
-      .card h2 {
-        margin: 0.2rem 0 1rem;
-        font-size: 18px;
-        color: #dce6ff;
-      }
-      .row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-bottom: 10px;
+        gap: 12px;
+        max-width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
       label {
-        font-size: 12px;
-        color: var(--muted);
+        font-weight: bold;
+        margin-top: 8px;
       }
       input {
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: #0d1430;
-        color: var(--text);
-      }
-      input:focus {
-        outline: 2px solid var(--accent-2);
-        border-color: transparent;
-      }
-      .actions {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 12px;
+        padding: 6px;
+        width: 98%;
+        border: 1px solid #ccc;
+        border-radius: 6px;
       }
       button {
-        border: 0;
-        padding: 10px 14px;
-        border-radius: 12px;
-        color: #0a1025;
-        background: var(--accent);
-        font-weight: 600;
+        background: #006400;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
         cursor: pointer;
+        margin-top: 12px;
       }
-      button.secondary {
-        background: var(--accent-2);
-        color: #06102b;
+      button:hover {
+        background: #004d00;
       }
-      button.ghost {
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        color: var(--text);
+      .table-container {
+        overflow-x: auto;
+        margin-top: 20px;
       }
-
-      .span-3 {
-        grid-column: span 3;
-      }
-      .span-4 {
-        grid-column: span 4;
-      }
-      .span-6 {
-        grid-column: span 6;
-      }
-      .span-8 {
-        grid-column: span 8;
-      }
-      .span-12 {
-        grid-column: span 12;
-      }
-
       table {
         width: 100%;
         border-collapse: collapse;
+        margin-bottom: 20px;
       }
       th,
       td {
-        padding: 10px 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        text-align: right;
-      }
-      th {
-        color: #cfe1ff;
-        text-align: right;
-        font-weight: 700;
-      }
-      th:first-child,
-      td:first-child {
-        text-align: left;
-      }
-      tfoot td {
-        font-weight: 800;
-      }
-      .pill {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 999px;
-        font-size: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #bcd0ff;
-      }
-
-      .note {
-        color: var(--muted);
-        font-size: 12px;
-        margin-top: 8px;
-      }
-      .success {
-        color: #b6ffce;
-      }
-      .danger {
-        color: #ffd2d2;
-      }
-      .footer {
-        margin-top: 24px;
-        color: var(--muted);
-        font-size: 12px;
+        border: 1px solid #ccc;
+        padding: 8px;
         text-align: center;
       }
-      .flex {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
+      th {
+        background: #006400;
+        color: white;
       }
-      .right {
-        margin-left: auto;
-      }
-      .scroll {
-        overflow: auto;
-      }
-
-      @media (max-width: 960px) {
-        .span-3,
-        .span-4,
-        .span-6,
-        .span-8 {
-          grid-column: span 12;
-        }
-        .row {
-          grid-template-columns: 1fr;
-        }
+      tr:nth-child(even) {
+        background: #e6f2ff;
       }
     </style>
   </head>
   <body>
-    <header>
-      <h3><a href="/index.html">Redirect to Home</a></h3>
-      <hr />
-      <h1>Integrated Farm Finance Calculator</h1>
-      <p>
-        Configure your 1-acre integrated farming model, compute monthly income,
-        EMI, and export a detailed 5‑year schedule to PDF or Excel.
-      </p>
-    </header>
+    <h3><a href="/index.html">Redirect to Home</a></h3>
+    <hr />
+    <h1>🌾 Integrated Farming Loan Projection</h1>
 
-    <div class="container">
-      <div class="grid">
-        <!-- Inputs: Production & Savings -->
-        <section class="card span-8">
-          <h2>Production & Savings Inputs</h2>
-          <div class="grid">
-            <div class="span-6">
-              <div class="row">
-                <div>
-                  <label>Cows</label>
-                  <input id="cows" type="number" value="10" min="0" />
-                </div>
-                <div>
-                  <label>Liters per cow/day</label>
-                  <input
-                    id="litersPerCow"
-                    type="number"
-                    value="15"
-                    min="0"
-                    step="0.1"
-                  />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Milk price (₹/L)</label>
-                  <input
-                    id="milkPrice"
-                    type="number"
-                    value="35"
-                    min="0"
-                    step="0.1"
-                  />
-                </div>
-                <div>
-                  <label>Dairy expense (% of income)</label>
-                  <input
-                    id="dairyExpensePct"
-                    type="number"
-                    value="60"
-                    min="0"
-                    max="100"
-                  />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Broilers per cycle</label>
-                  <input id="birds" type="number" value="1000" min="0" />
-                </div>
-                <div>
-                  <label>Profit per bird (₹)</label>
-                  <input id="profitPerBird" type="number" value="35" min="0" />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Cycles per year (poultry)</label>
-                  <input
-                    id="cyclesPerYear"
-                    type="number"
-                    value="6"
-                    min="0"
-                    step="1"
-                  />
-                </div>
-                <div>
-                  <label>Aquaculture net (₹/year)</label>
-                  <input
-                    id="aquaYear"
-                    type="number"
-                    value="250000"
-                    min="0"
-                    step="1000"
-                  />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Biogas & slurry savings (₹/month)</label>
-                  <input
-                    id="biogas"
-                    type="number"
-                    value="5000"
-                    min="0"
-                    step="100"
-                  />
-                </div>
-                <div>
-                  <label>Fodder savings (₹/month)</label>
-                  <input
-                    id="fodder"
-                    type="number"
-                    value="10000"
-                    min="0"
-                    step="100"
-                  />
-                </div>
-              </div>
-            </div>
+    <form id="farmForm">
+      <h2>🐄 Dairy</h2>
+      <label>Cows</label><input type="number" id="cows" value="10" />
+      <label>Liters/Day</label
+      ><input type="number" id="milkLiters" value="15" />
+      <label>Price/Litre (₹)</label
+      ><input type="number" id="milkPrice" value="35" />
 
-            <div class="span-6">
-              <div class="row">
-                <div>
-                  <label>Loan amount (₹)</label>
-                  <input
-                    id="loanAmount"
-                    type="number"
-                    value="1000000"
-                    min="0"
-                    step="1000"
-                  />
-                </div>
-                <div>
-                  <label>Interest rate (% p.a.)</label>
-                  <input
-                    id="interestRate"
-                    type="number"
-                    value="7"
-                    min="0"
-                    step="0.1"
-                  />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Tenure (years)</label>
-                  <input
-                    id="tenureYears"
-                    type="number"
-                    value="5"
-                    min="1"
-                    step="1"
-                  />
-                </div>
-                <div>
-                  <label>Start month (YYYY-MM)</label>
-                  <input id="startMonth" type="month" />
-                </div>
-              </div>
-              <div class="row">
-                <div>
-                  <label>Round amounts to nearest</label>
-                  <input
-                    id="roundTo"
-                    type="number"
-                    value="1"
-                    min="1"
-                    step="1"
-                  />
-                </div>
-                <div class="flex" style="margin-top: 22px">
-                  <span class="pill">All values monthly unless noted</span>
-                </div>
-              </div>
-              <div class="actions">
-                <button id="calcBtn">Calculate</button>
-                <button class="secondary" id="saveBtn">Save inputs</button>
-                <button class="ghost" id="resetBtn">Reset</button>
-              </div>
-              <p class="note">
-                Tips: Values are conservative defaults. Adjust to your scenario.
-                Saved inputs persist in your browser.
-              </p>
-            </div>
-          </div>
-        </section>
+      <h2>🐓 Poultry</h2>
+      <label>Birds</label><input type="number" id="birds" value="1000" />
+      <label>Profit/Bird (₹)</label
+      ><input type="number" id="profitPerBird" value="35" />
+      <label>Cycles/Year</label><input type="number" id="cycles" value="6" />
 
-        <!-- Summary -->
-        <section class="card span-4">
-          <h2>Monthly Summary</h2>
-          <div id="summary"></div>
-          <div class="actions">
-            <button class="secondary" id="exportPdf">Export PDF</button>
-            <button class="ghost" id="exportXlsx">Export Excel</button>
-          </div>
-          <p class="note" id="surplusNote"></p>
-        </section>
+      <h2>🐟 Aquaculture</h2>
+      <label>Annual Profit (₹)</label
+      ><input type="number" id="aquaProfit" value="250000" />
 
-        <!-- Schedule Table -->
-        <section class="card span-12">
-          <div class="flex">
-            <h2 style="margin-right: auto">5‑Year Projection & Amortization</h2>
-            <div class="pill" id="emiBadge">EMI: –</div>
-          </div>
-          <div class="scroll">
-            <table id="schedTable">
-              <thead>
-                <tr>
-                  <th>Month</th>
-                  <th>Date</th>
-                  <th>Income (₹)</th>
-                  <th>EMI (₹)</th>
-                  <th>Interest (₹)</th>
-                  <th>Principal (₹)</th>
-                  <th>Loan Balance (₹)</th>
-                  <th>Net Cashflow (₹)</th>
-                  <th>Cumulative (₹)</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="2">Totals</td>
-                  <td id="tIncome">–</td>
-                  <td id="tEmi">–</td>
-                  <td id="tInt">–</td>
-                  <td id="tPrin">–</td>
-                  <td>—</td>
-                  <td id="tNet">–</td>
-                  <td id="tCum">–</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </section>
-      </div>
+      <h2>🌱 Other Savings</h2>
+      <label>Biogas & Slurry Savings (₹/month)</label
+      ><input type="number" id="biogas" value="5000" />
+      <label>Fodder Savings (₹/month)</label
+      ><input type="number" id="fodder" value="10000" />
 
-      <div class="footer">
-        Made for quick planning. Always validate with your banker/consultant
-        before committing.
-      </div>
+      <h2>💰 Loan</h2>
+      <label>Loan Amount (₹)</label
+      ><input type="number" id="loanAmount" value="1000000" />
+      <label>Interest Rate (%)</label
+      ><input type="number" id="interestRate" value="7" />
+      <label>Tenure (Years)</label><input type="number" id="tenure" value="5" />
+
+      <button type="button" onclick="calculateResults()">Calculate</button>
+      <button type="button" onclick="exportPDF()">Export PDF</button>
+      <button type="button" onclick="exportExcel()">Export Excel</button>
+    </form>
+
+    <div class="table-container">
+      <h2>📊 Monthly Summary</h2>
+      <table id="summaryTable"></table>
     </div>
 
-    <!-- Libraries for export -->
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <div class="table-container">
+      <h2>📊 5-Year Projection & Amortization</h2>
+      <table id="amortizationTable">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Date</th>
+            <th>Income (₹)</th>
+            <th>EMI (₹)</th>
+            <th>Interest (₹)</th>
+            <th>Principal (₹)</th>
+            <th>Balance (₹)</th>
+            <th>Net Cashflow (₹)</th>
+            <th>Cumulative (₹)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- jsPDF + AutoTable + SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script>
-      const $ = (id) => document.getElementById(id);
+      let amortizationData = [];
 
-      function roundTo(value, step) {
-        const s = Math.max(1, Number(step) || 1);
-        return Math.round((value || 0) / s) * s;
-      }
-
-      function fmt(n) {
-        return Number(n).toLocaleString("en-IN", { maximumFractionDigits: 0 });
-      }
-
-      function readInputs() {
-        return {
-          cows: +$("cows").value,
-          litersPerCow: +$("litersPerCow").value,
-          milkPrice: +$("milkPrice").value,
-          dairyExpensePct: +$("dairyExpensePct").value / 100,
-          birds: +$("birds").value,
-          profitPerBird: +$("profitPerBird").value,
-          cyclesPerYear: +$("cyclesPerYear").value,
-          aquaYear: +$("aquaYear").value,
-          biogas: +$("biogas").value,
-          fodder: +$("fodder").value,
-          loanAmount: +$("loanAmount").value,
-          interestRate: +$("interestRate").value / 100,
-          tenureYears: +$("tenureYears").value,
-          startMonth: $("startMonth").value,
-          roundTo: +$("roundTo").value,
-        };
-      }
-
-      function saveInputs() {
-        localStorage.setItem("farmInputs", JSON.stringify(readInputs()));
-        toast("Inputs saved");
-      }
-
-      function loadInputs() {
-        const s = localStorage.getItem("farmInputs");
-        if (!s) return;
-        try {
-          const v = JSON.parse(s);
-          for (const [k, val] of Object.entries(v)) {
-            if ($(k)) $(k).value = k === "dairyExpensePct" ? val * 100 : val;
-          }
-        } catch (e) {
-          console.warn(e);
-        }
-      }
-
-      function toast(msg) {
-        const el = document.createElement("div");
-        el.textContent = msg;
-        el.style.position = "fixed";
-        el.style.bottom = "16px";
-        el.style.right = "16px";
-        el.style.padding = "10px 12px";
-        el.style.background = "rgba(255,255,255,.1)";
-        el.style.border = "1px solid rgba(255,255,255,.2)";
-        el.style.borderRadius = "12px";
-        el.style.backdropFilter = "blur(6px)";
-        el.style.zIndex = 9999;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1800);
-      }
-
-      function calc() {
-        const p = readInputs();
+      function calculateResults() {
+        let cows = +document.getElementById("cows").value;
+        let milkLiters = +document.getElementById("milkLiters").value;
+        let milkPrice = +document.getElementById("milkPrice").value;
+        let birds = +document.getElementById("birds").value;
+        let profitPerBird = +document.getElementById("profitPerBird").value;
+        let cycles = +document.getElementById("cycles").value;
+        let aquaProfit = +document.getElementById("aquaProfit").value;
+        let biogas = +document.getElementById("biogas").value;
+        let fodder = +document.getElementById("fodder").value;
+        let loanAmount = +document.getElementById("loanAmount").value;
+        let interestRate = +document.getElementById("interestRate").value / 100;
+        let tenureYears = +document.getElementById("tenure").value;
 
         // Dairy
-        const milkProduction = p.cows * p.litersPerCow * 30; // L/month
-        const milkIncome = milkProduction * p.milkPrice; // Rs/month
-        const milkCosts = milkIncome * p.dairyExpensePct; // 60% expenses
-        const milkNet = milkIncome - milkCosts;
+        let milkProduction = cows * milkLiters * 30;
+        let milkIncome = milkProduction * milkPrice;
+        let milkNet = milkIncome * 0.4;
 
-        // Poultry (monthly avg)
-        const poultryNetMonth =
-          (p.birds * p.profitPerBird * p.cyclesPerYear) / 12;
+        // Poultry
+        let poultryNetYear = birds * profitPerBird * cycles;
+        let poultryNetMonth = poultryNetYear / 12;
 
-        // Aquaculture (monthly)
-        const aquaNetMonth = p.aquaYear / 12;
+        // Aquaculture
+        let aquaNetMonth = aquaProfit / 12;
 
-        // Income monthly
-        const incomeMonthly =
-          milkNet + poultryNetMonth + aquaNetMonth + p.biogas + p.fodder;
+        // Total Monthly Income
+        let monthlyIncome =
+          milkNet + poultryNetMonth + aquaNetMonth + biogas + fodder;
 
-        // Loan
-        const nMonths = p.tenureYears * 12;
-        const r = p.interestRate / 12;
-        const emi =
-          r > 0
-            ? (p.loanAmount * r * Math.pow(1 + r, nMonths)) /
-              (Math.pow(1 + r, nMonths) - 1)
-            : p.loanAmount / nMonths;
+        // EMI
+        let nMonths = tenureYears * 12;
+        let monthlyRate = interestRate / 12;
+        let emi =
+          (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, nMonths)) /
+          (Math.pow(1 + monthlyRate, nMonths) - 1);
 
-        // Schedule
-        const rows = [];
-        let balance = p.loanAmount;
-        let cum = 0;
-        let totalIncome = 0,
-          totalEmi = 0,
-          totalInt = 0,
-          totalPrin = 0,
-          totalNet = 0;
+        let netCashflow = monthlyIncome - emi;
 
-        const start = p.startMonth
-          ? new Date(p.startMonth + "-01T00:00:00")
-          : new Date();
+        // Summary Table
+        let summaryHTML = `
+        <tr><th>Component</th><th>Monthly (₹)</th></tr>
+        <tr><td>Dairy Net</td><td>${milkNet.toFixed(0)}</td></tr>
+        <tr><td>Poultry Net</td><td>${poultryNetMonth.toFixed(0)}</td></tr>
+        <tr><td>Aquaculture Net</td><td>${aquaNetMonth.toFixed(0)}</td></tr>
+        <tr><td>Biogas & Slurry</td><td>${biogas}</td></tr>
+        <tr><td>Fodder</td><td>${fodder}</td></tr>
+        <tr><th>Total Income</th><th>${monthlyIncome.toFixed(0)}</th></tr>
+        <tr><td>EMI</td><td>${emi.toFixed(0)}</td></tr>
+        <tr><th>Net Surplus</th><th>${netCashflow.toFixed(0)}</th></tr>
+      `;
+        document.getElementById("summaryTable").innerHTML = summaryHTML;
+
+        // Amortization
+        amortizationData = [];
+        let balance = loanAmount,
+          cumulative = 0;
+        let tbody = document.querySelector("#amortizationTable tbody");
+        tbody.innerHTML = "";
 
         for (let m = 1; m <= nMonths; m++) {
-          const interest = balance * r;
-          const principal = Math.min(balance, emi - interest);
-          balance = Math.max(0, balance - principal);
+          let interestComp = balance * monthlyRate;
+          let principalComp = emi - interestComp;
+          balance -= principalComp;
+          let netCash = monthlyIncome - emi;
+          cumulative += netCash;
 
-          const net = incomeMonthly - emi;
-          cum += net;
-
-          totalIncome += incomeMonthly;
-          totalEmi += emi;
-          totalInt += interest;
-          totalPrin += principal;
-          totalNet += net;
-
-          const d = new Date(start);
-          d.setMonth(d.getMonth() + (m - 1));
-          const ds = d.toLocaleDateString("en-CA", {
+          let today = new Date();
+          let payDate = new Date(today.getFullYear(), today.getMonth() + m, 1);
+          let dateStr = payDate.toLocaleDateString("en-GB", {
+            month: "short",
             year: "numeric",
-            month: "2-digit",
           });
 
-          rows.push({
-            m,
-            date: ds,
-            income: incomeMonthly,
-            emi,
-            interest,
-            principal,
-            balance,
-            net,
-            cum,
-          });
+          let row = {
+            Month: m,
+            Date: dateStr,
+            Income: monthlyIncome.toFixed(0),
+            EMI: emi.toFixed(0),
+            Interest: interestComp.toFixed(0),
+            Principal: principalComp.toFixed(0),
+            Balance: balance > 0 ? balance.toFixed(0) : 0,
+            NetCashflow: netCash.toFixed(0),
+            Cumulative: cumulative.toFixed(0),
+          };
+          amortizationData.push(row);
+
+          tbody.innerHTML += `
+          <tr>
+            <td>${row.Month}</td>
+            <td>${row.Date}</td>
+            <td>${row.Income}</td>
+            <td>${row.EMI}</td>
+            <td>${row.Interest}</td>
+            <td>${row.Principal}</td>
+            <td>${row.Balance}</td>
+            <td>${row.NetCashflow}</td>
+            <td>${row.Cumulative}</td>
+          </tr>
+        `;
         }
-
-        // Round & render summary
-        const step = p.roundTo;
-        const summary = [
-          ["Dairy Net", roundTo(milkNet, step)],
-          ["Poultry Net", roundTo(poultryNetMonth, step)],
-          ["Aquaculture Net", roundTo(aquaNetMonth, step)],
-          ["Biogas & Slurry Savings", roundTo(p.biogas, step)],
-          ["Fodder Savings", roundTo(p.fodder, step)],
-          ["Total Income", roundTo(incomeMonthly, step)],
-          ["EMI", roundTo(emi, step)],
-          ["Net Surplus", roundTo(incomeMonthly - emi, step)],
-        ];
-
-        $("summary").innerHTML = `
-        <table>
-          <tbody>
-            ${summary
-              .map(
-                (r) =>
-                  `<tr><td>${r[0]}</td><td style="text-align:right">₹ ${fmt(
-                    r[1]
-                  )}</td></tr>`
-              )
-              .join("")}
-          </tbody>
-        </table>
-      `;
-
-        $("emiBadge").textContent = "EMI: ₹ " + fmt(roundTo(emi, step));
-
-        $("surplusNote").innerHTML =
-          incomeMonthly - emi >= 0
-            ? `<span class="success">Monthly surplus is positive.</span>`
-            : `<span class="danger">Monthly surplus is negative. Consider reducing loan or improving income.</span>`;
-
-        // Render table body
-        const tbody = $("schedTable").querySelector("tbody");
-        tbody.innerHTML = rows
-          .map(
-            (r) => `
-        <tr>
-          <td>${r.m}</td>
-          <td>${r.date}</td>
-          <td>₹ ${fmt(roundTo(r.income, step))}</td>
-          <td>₹ ${fmt(roundTo(r.emi, step))}</td>
-          <td>₹ ${fmt(roundTo(r.interest, step))}</td>
-          <td>₹ ${fmt(roundTo(r.principal, step))}</td>
-          <td>₹ ${fmt(roundTo(r.balance, step))}</td>
-          <td>₹ ${fmt(roundTo(r.net, step))}</td>
-          <td>₹ ${fmt(roundTo(r.cum, step))}</td>
-        </tr>
-      `
-          )
-          .join("");
-
-        // Totals
-        $("tIncome").textContent = "₹ " + fmt(roundTo(totalIncome, step));
-        $("tEmi").textContent = "₹ " + fmt(roundTo(totalEmi, step));
-        $("tInt").textContent = "₹ " + fmt(roundTo(totalInt, step));
-        $("tPrin").textContent = "₹ " + fmt(roundTo(totalPrin, step));
-        $("tNet").textContent = "₹ " + fmt(roundTo(totalNet, step));
-        $("tCum").textContent =
-          "₹ " + fmt(roundTo(rows[rows.length - 1].cum, step));
-
-        // Persist last calc result for export
-        window.__farmCalc = { summary, rows, step };
       }
 
+      // Export to PDF
       function exportPDF() {
-        if (!window.__farmCalc) {
-          toast("Please calculate first");
-          return;
-        }
-        const { summary, rows, step } = window.__farmCalc;
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "landscape" });
+        const doc = new jsPDF();
+        doc.text("Integrated Farming Loan Projection", 14, 15);
 
-        doc.setFontSize(16);
-        doc.text("Integrated Farm Loan Projection", 14, 14);
-        doc.setFontSize(10);
-        doc.text("Monthly Summary", 14, 22);
+        // Summary Table
+        let summaryTable = document.getElementById("summaryTable");
+        doc.autoTable({ html: summaryTable, startY: 20 });
 
-        // Summary table
+        // Amortization
         doc.autoTable({
-          startY: 24,
-          head: [["Component", "Monthly (₹)"]],
-          body: summary.map((r) => [
-            r[0],
-            new Intl.NumberFormat("en-IN").format(r[1]),
-          ]),
-        });
-
-        // Schedule table (paginated)
-        const schedStartY = doc.lastAutoTable.finalY + 8;
-        doc.text("5-Year Projection & Amortization", 14, schedStartY);
-
-        doc.autoTable({
-          startY: schedStartY + 2,
           head: [
             [
               "Month",
               "Date",
-              "Income (₹)",
-              "EMI (₹)",
-              "Interest (₹)",
-              "Principal (₹)",
-              "Balance (₹)",
-              "Net Cashflow (₹)",
-              "Cumulative (₹)",
+              "Income",
+              "EMI",
+              "Interest",
+              "Principal",
+              "Balance",
+              "Net Cashflow",
+              "Cumulative",
             ],
           ],
-          body: rows.map((r) =>
-            [
-              r.m,
-              r.date,
-              roundTo(r.income, step),
-              roundTo(r.emi, step),
-              roundTo(r.interest, step),
-              roundTo(r.principal, step),
-              roundTo(r.balance, step),
-              roundTo(r.net, step),
-              roundTo(r.cum, step),
-            ].map((v) =>
-              typeof v === "number"
-                ? new Intl.NumberFormat("en-IN").format(v)
-                : v
-            )
-          ),
-          styles: { fontSize: 8 },
+          body: amortizationData.map((r) => Object.values(r)),
+          startY: doc.lastAutoTable.finalY + 10,
         });
 
-        doc.save("Integrated-Farm-Projection.pdf");
+        doc.save("farm_projection.pdf");
       }
 
-      function exportXLSX() {
-        if (!window.__farmCalc) {
-          toast("Please calculate first");
-          return;
-        }
-        const { summary, rows, step } = window.__farmCalc;
+      // Export to Excel
+      function exportExcel() {
+        let wb = XLSX.utils.book_new();
 
-        const wb = XLSX.utils.book_new();
-        const ws1 = XLSX.utils.aoa_to_sheet([
-          ["Component", "Monthly (₹)"],
-          ...summary.map((r) => [r[0], roundTo(r[1], step)]),
-        ]);
+        // Summary
+        let summaryTable = document.getElementById("summaryTable");
+        let ws1 = XLSX.utils.table_to_sheet(summaryTable);
         XLSX.utils.book_append_sheet(wb, ws1, "Summary");
 
-        const ws2 = XLSX.utils.json_to_sheet(
-          rows.map((r) => ({
-            Month: r.m,
-            Date: r.date,
-            "Income (₹)": roundTo(r.income, step),
-            "EMI (₹)": roundTo(r.emi, step),
-            "Interest (₹)": roundTo(r.interest, step),
-            "Principal (₹)": roundTo(r.principal, step),
-            "Balance (₹)": roundTo(r.balance, step),
-            "Net Cashflow (₹)": roundTo(r.net, step),
-            "Cumulative (₹)": roundTo(r.cum, step),
-          }))
-        );
-        XLSX.utils.book_append_sheet(wb, ws2, "Projection");
+        // Amortization
+        let ws2 = XLSX.utils.json_to_sheet(amortizationData);
+        XLSX.utils.book_append_sheet(wb, ws2, "Amortization");
 
-        XLSX.writeFile(wb, "Integrated-Farm-Projection.xlsx");
+        XLSX.writeFile(wb, "farm_projection.xlsx");
       }
-
-      // Wire up
-      $("calcBtn").addEventListener("click", calc);
-      $("exportPdf").addEventListener("click", exportPDF);
-      $("exportXlsx").addEventListener("click", exportXLSX);
-      $("saveBtn").addEventListener("click", saveInputs);
-      $("resetBtn").addEventListener("click", () => {
-        localStorage.removeItem("farmInputs");
-        location.reload();
-      });
-
-      // Auto-load
-      loadInputs();
-      calc();
     </script>
   </body>
 </html>
